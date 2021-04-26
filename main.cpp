@@ -1,8 +1,4 @@
-#include <iostream>
-#include <vector>
 #include "inlcude/Helpers.hpp"
-
-typedef std::vector<std::vector<int>> IntMatrix;
 
 int main() {
     IntMatrix x = {
@@ -20,27 +16,12 @@ int main() {
             {3, 16, 8, 7}
     };
 
-/*
-    IntMatrix res = DotProd(x, y, 1);
+    IntMatrix res = DotProd(x, y, x.size());
+    IntMatrix res2 = KaratsubaProd(x, y);
 
-    for(auto &i :res){
-        for (auto j: i){
-            (void)printf("%d ", j);
-        }
-        (void)printf("\n");
-    }
-*/
-
-    (void)printf("\n");
-
-    IntMatrix x2 = Slice2d(x, 0, x.size()/2, 0, x.size()/2);
-    for(auto &i :x2){
-        for (auto j: i){
-            (void)printf("%d ", j);
-        }
-        (void)printf("\n");
-    }
-
-
+    PrintMatrix(res);
+    PrintMatrix(res2);
     return 0;
 }
+
+

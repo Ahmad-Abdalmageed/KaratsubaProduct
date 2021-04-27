@@ -6,7 +6,7 @@ Implementation of the Karatsuba Polynomial Product
 **The First Attempt Straightforward from the formulas above (assuming that n is a power of 2)**
 
 **Analysis**: The Splitting operations take constant time. The combining cost (Calculating C Quarters) is
-Θ(n^2) (adding two $\frac{n}{2}x\frac{n}{2}$ matrices takes time $\frac{n^2}{4} = Θ(n^2))$. There are 8 recursive calls
+Θ(n^2) (adding two n/2xn/2 matrices takes time n^2/4 = Θ(n^2). There are 8 recursive calls
 So let T(n) be the total number of mathematical operations performed, then
 T(n) = 8T(n^2) + Θ(n^2)
 T(n) = Θ(n^log2(8)) = Θ(n^3)

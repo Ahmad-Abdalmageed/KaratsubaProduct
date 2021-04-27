@@ -1,5 +1,4 @@
 #include "inlcude/Helpers.hpp"
-#include <bits/stdc++.h>
 
 int main() {
     IntMatrix x = {
@@ -20,8 +19,12 @@ int main() {
     IntMatrix res = DotProd(x, y, x.size());
     IntMatrix res2 = KaratsubaProd(x, y);
 
+    (void)printf("The Naive Solution Output: O(n^3): \n");
     PrintMatrix(res);
+
+    (void)printf("1st Divide and Conquer Output: O(n^3): \n");
     PrintMatrix(res2);
+
     return 0;
 }
 

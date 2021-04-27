@@ -8,12 +8,8 @@
 
 /*
  * Computes the Dot Product of Two Matrices
- *
- * Arguments:
- *     IntMatrix x:
- *
  */
-IntMatrix DotProd(const IntMatrix x, const IntMatrix y, int size){
+IntMatrix DotProd(const IntMatrix& x, const IntMatrix& y, int size){
     IntMatrix res(size, std::vector<int>(size, 0));
     for (int i=0; i < size; i++){
         for(int j=0; j < size; j++){
@@ -25,27 +21,28 @@ IntMatrix DotProd(const IntMatrix x, const IntMatrix y, int size){
     return res;
 }
 
-IntMatrix KaratsubaProd(const IntMatrix x, const IntMatrix y){
+IntMatrix KaratsubaProd(const IntMatrix& x, const IntMatrix& y){
     IntMatrix res(x.size(), std::vector<int>(x[0].size(), 0));
     if (x.size() == 1){
         res[0][0] = x[0][0] * y[0][0];
     } else{
+        int half_size = (int)x.size()/2;
 
         // Slicing Both Arrays
-        IntMatrix x11 = Slice2d(x, 0, x.size()/2, 0, x.size()/2);
-        IntMatrix x12 = Slice2d(x, 0, x.size()/2, x.size()/2, x.size());
-        IntMatrix x21 = Slice2d(x, x.size()/2, x.size(), 0, x.size());
-        IntMatrix x22 = Slice2d(x, x.size()/2, x.size(), x.size()/2, x.size());
+        IntMatrix x11 = Slice2d(x, 0, half_size, 0, half_size);
+        IntMatrix x12 = Slice2d(x, 0, half_size, half_size, x.size());
+        IntMatrix x21 = Slice2d(x, half_size, x.size(), 0, (int)x.size());
+        IntMatrix x22 = Slice2d(x, half_size, x.size(), half_size, x.size());
 
-        IntMatrix y11 = Slice2d(y, 0, x.size()/2, 0, x.size()/2);
-        IntMatrix y12 = Slice2d(y, 0, x.size()/2, x.size()/2, x.size());
-        IntMatrix y21 = Slice2d(y, x.size()/2, x.size(), 0, x.size());
-        IntMatrix y22 = Slice2d(y, x.size()/2, x.size(), x.size()/2, x.size());
+        IntMatrix y11 = Slice2d(y, 0, half_size, 0, half_size);
+        IntMatrix y12 = Slice2d(y, 0, half_size, half_size, x.size());
+        IntMatrix y21 = Slice2d(y, half_size, x.size(), 0, x.size());
+        IntMatrix y22 = Slice2d(y, half_size, x.size(), half_size, x.size());
 
-        IntMatrix res11 = Slice2d(res, 0, x.size()/2, 0, x.size()/2);
-        IntMatrix res12 = Slice2d(res, 0, x.size()/2, x.size()/2, x.size());
-        IntMatrix res21 = Slice2d(res, x.size()/2, x.size(), 0, x.size());
-        IntMatrix res22 = Slice2d(res, x.size()/2, x.size(), x.size()/2, x.size());
+        IntMatrix res11 = Slice2d(res, 0, half_size, 0, half_size);
+        IntMatrix res12 = Slice2d(res, 0, half_size, half_size, x.size());
+        IntMatrix res21 = Slice2d(res, half_size, x.size(), 0, x.size());
+        IntMatrix res22 = Slice2d(res, half_size, x.size(), half_size, x.size());
 
         // Calculating C11
         res11 = AddMat(KaratsubaProd(x11, y11), KaratsubaProd(x12, y21));
@@ -68,7 +65,7 @@ IntMatrix KaratsubaProd(const IntMatrix x, const IntMatrix y){
 /*
  * Slice Given Matrix int Sub Matrix with given dimensions
  */
-IntMatrix Slice2d(const IntMatrix x, int x_begin, int x_end, int y_begin, int y_end){
+IntMatrix Slice2d(const IntMatrix& x, int x_begin, int x_end, int y_begin, int y_end){
     int new_size = x_end - x_begin;
     IntMatrix res(new_size, std::vector<int>(new_size, 0));
     for(int i=x_begin; i<x_end; i++){
@@ -78,7 +75,6 @@ IntMatrix Slice2d(const IntMatrix x, int x_begin, int x_end, int y_begin, int y_
     }
     return res;
 }
-
 
 /*
  * Add 2 Square Matrices
@@ -97,12 +93,14 @@ IntMatrix AddMat(IntMatrix x, IntMatrix y){
 /*
  * Print Given Matrix
  */
-void PrintMatrix(IntMatrix src){
+void PrintMatrix(const IntMatrix& src){
     for(auto &i :src){
+        printf("[");
         for (auto j: i){
-            (void)printf("%d ", j);
+            (void)printf("%-10d ", j);
+
         }
-        (void)printf("\n");
+        (void)printf("]\n");
     }
 
 }
@@ -111,7 +109,7 @@ void PrintMatrix(IntMatrix src){
  * Concatenate Two Matrices on the Horizontal Axis
  */
 IntMatrix HConcatenate(IntMatrix x, IntMatrix y){
-    IntMatrix res = x;
+    IntMatrix res = std::move(x);
     int count = 0;
     for (auto &i: res) {
         (void) i.insert(i.end(), y[count].begin(), y[count].end());
@@ -124,7 +122,7 @@ IntMatrix HConcatenate(IntMatrix x, IntMatrix y){
  * Concatenate Two Matrices on the Vertical Axis
  */
 IntMatrix VConcatenate(IntMatrix x, IntMatrix y){
-    IntMatrix res = x;
+    IntMatrix res = std::move(x);
     (void)res.insert(res.end(), y.begin(), y.end());
     return res;
 }

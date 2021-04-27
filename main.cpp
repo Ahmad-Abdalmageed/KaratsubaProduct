@@ -25,6 +25,38 @@ int main() {
     (void)printf("1st Divide and Conquer Output: O(n^3): \n");
     PrintMatrix(res2);
 
+
+    // Stress testing
+    int iters = 10;
+    std::random_device rnd_device;
+    std::default_random_engine rnd_engine{rnd_device()};
+    std::uniform_int_distribution<int> dist{0, 4};
+    auto gen = [&dist, &rnd_engine](){
+        return dist(rnd_engine);
+    };
+
+    int sizes[] = {2, 4, 8, 16, 32};
+
+    while (iters >0){
+        int size = gen();
+        IntMatrix RandX = GenSquareMat(sizes[size]);
+        IntMatrix RandY = GenSquareMat(sizes[size]);
+
+        IntMatrix KOut = KaratsubaProd(RandX, RandY);
+        IntMatrix DOut = DotProd(RandX, RandY, sizes[size]);
+
+        bool equal = std::equal(KOut.begin(), KOut.end(), DOut.begin(), DOut.end());
+        if (!equal){
+            printf("1st Mat: \n");
+            PrintMatrix(RandX);
+
+            printf("2nd Mat: \n");
+            PrintMatrix(RandY);
+        }
+        iters--;
+    }
+    printf("Works Great !!");
+
     return 0;
 }
 

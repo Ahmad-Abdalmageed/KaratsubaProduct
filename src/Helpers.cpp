@@ -21,27 +21,48 @@ IntMatrix DotProd(const IntMatrix& x, const IntMatrix& y, int size){
     return res;
 }
 
+
+/*
+ * Karatsuba Product Implementation
+ *
+ * Algorithm:
+ * Using Divide And Conquer techniques to Calculate the Multiplication
+ * of Two Square Matrices:
+ * if :
+ * A = ( A11 A12     and B = ( B11 B12
+ *       A21 A22 )             B21 B22)
+ * C is the Result of Multiplication of the Two Matrices
+ * Then C:
+ * C11 = A11.B11 + A12.B21
+ * C12 = A11.B12 + A12.B22
+ * C21 = A21.B11 + A22.B21
+ * C22 = A21.B12 + A22.B22
+ *
+ * Resulting in 8 Multiplications and 4 Summation Operations.
+ */
 IntMatrix KaratsubaProd(const IntMatrix& x, const IntMatrix& y){
     IntMatrix res(x.size(), std::vector<int>(x[0].size(), 0));
     if (x.size() == 1){
         res[0][0] = x[0][0] * y[0][0];
     } else{
-        int half_size = (int)x.size()/2;
+        int half_size = ((int)x.size()/2);
 
-        // Slicing Both Arrays
+        // Extracting Sub quarters of each array
+        // A ==>> A11, A12, A21, A22
+        // Dividing each array into four Sub-quarters
         IntMatrix x11 = Slice2d(x, 0, half_size, 0, half_size);
         IntMatrix x12 = Slice2d(x, 0, half_size, half_size, x.size());
-        IntMatrix x21 = Slice2d(x, half_size, x.size(), 0, (int)x.size());
+        IntMatrix x21 = Slice2d(x, half_size, x.size(), 0, half_size);
         IntMatrix x22 = Slice2d(x, half_size, x.size(), half_size, x.size());
 
         IntMatrix y11 = Slice2d(y, 0, half_size, 0, half_size);
         IntMatrix y12 = Slice2d(y, 0, half_size, half_size, x.size());
-        IntMatrix y21 = Slice2d(y, half_size, x.size(), 0, x.size());
+        IntMatrix y21 = Slice2d(y, half_size, x.size(), 0, half_size);
         IntMatrix y22 = Slice2d(y, half_size, x.size(), half_size, x.size());
 
         IntMatrix res11 = Slice2d(res, 0, half_size, 0, half_size);
         IntMatrix res12 = Slice2d(res, 0, half_size, half_size, x.size());
-        IntMatrix res21 = Slice2d(res, half_size, x.size(), 0, x.size());
+        IntMatrix res21 = Slice2d(res, half_size, x.size(), 0, half_size);
         IntMatrix res22 = Slice2d(res, half_size, x.size(), half_size, x.size());
 
         // Calculating C11
@@ -102,7 +123,7 @@ void PrintMatrix(const IntMatrix& src){
         }
         (void)printf("]\n");
     }
-
+    printf("\n");
 }
 
 /*
@@ -125,4 +146,23 @@ IntMatrix VConcatenate(IntMatrix x, IntMatrix y){
     IntMatrix res = std::move(x);
     (void)res.insert(res.end(), y.begin(), y.end());
     return res;
+}
+
+/*
+ * Generate a Random Square Matrix
+ */
+IntMatrix GenSquareMat(int size){
+    std::random_device rnd_device;
+    std::default_random_engine rand_engine{rnd_device()};
+    std::uniform_int_distribution<int> dist{1, 100};
+    auto gen = [&dist, &rand_engine](){
+        return dist(rand_engine);
+    };
+
+    IntMatrix RandX(size, std::vector<int>(size));
+    for(auto & ix: RandX){
+        std::generate(ix.begin(), ix.end(), gen);
+    }
+
+    return RandX;
 }

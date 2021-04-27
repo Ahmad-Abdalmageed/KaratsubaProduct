@@ -12,6 +12,8 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
+#include <random>
 typedef std::vector<std::vector<int>> IntMatrix;
 
 IntMatrix DotProd(const IntMatrix& x, const IntMatrix& y, int size);
@@ -21,5 +23,6 @@ IntMatrix AddMat(IntMatrix x, IntMatrix y);
 IntMatrix HConcatenate(IntMatrix x, IntMatrix y);
 IntMatrix VConcatenate(IntMatrix x, IntMatrix y);
 void PrintMatrix(const IntMatrix& src);
+IntMatrix GenSquareMat(int size);
 
 #endif //ALGORITHMS_HELPERS_HPP
